@@ -3,6 +3,9 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var helpers = require('./helpers');
 
+const autoprefixer = require('autoprefixer');
+const ProvidePlugin = require('webpack/lib/ProvidePlugin'); 
+
 module.exports = {
   entry: {
     'polyfills': './src/polyfills.ts',
@@ -26,7 +29,7 @@ module.exports = {
         loader: 'html'
       },
       {
-        test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+        test: /\.(png|jpe?g|gif|woff|ico)$/,
         loader: 'file?name=assets/[name].[hash].[ext]'
       },
       {
@@ -38,9 +41,24 @@ module.exports = {
         test: /\.css$/,
         include: helpers.root('src', 'app'),
         loader: 'raw'
+      },
+      { 
+          test: /\.scss$/, 
+          loaders: ['style', 'css', 'postcss', 'sass'] 
+      },
+      { 
+          test: /\.(woff2?|ttf|eot|svg)$/, 
+          loader: 'url?limit=10000' 
+      },
+        // Bootstrap 4
+      { 
+          test: /bootstrap\/dist\/js\/umd\//, 
+          loader: 'imports?jQuery=jquery' 
       }
     ]
   },
+
+  postcss: [autoprefixer],  // this is inside module.exports object
 
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
@@ -49,6 +67,14 @@ module.exports = {
 
     new HtmlWebpackPlugin({
       template: 'src/index.html'
+    }),
+
+    new ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery',
+            jquery: 'jquery',
+            "Tether": 'tether',
+            "window.Tether": "tether"
     })
   ]
 };

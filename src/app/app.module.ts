@@ -10,6 +10,9 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AuthRoutingModule }   from './auth/auth-routing.module';
 import { AuthComponent } from './auth/auth.component';
+import { AuthModalComponent } from './auth/auth-modal.component';
+
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 //import { HomeModule } from './home/home.module';
 
@@ -20,13 +23,18 @@ import { AuthComponent } from './auth/auth.component';
     CommonModule,
     HttpModule,
     JsonpModule,
+    NgbModule.forRoot(),
 
     AppRoutingModule,
     AuthRoutingModule
   ],
   declarations: [
     AppComponent,
-    AuthComponent
+    AuthComponent,
+    AuthModalComponent
+  ],
+  entryComponents: [
+    AuthModalComponent
   ],
   bootstrap: [ AppComponent ]
 })

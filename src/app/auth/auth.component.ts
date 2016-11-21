@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { AuthService } from './auth.service';
+
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { AuthModalComponent } from './auth-modal.component';
+
 
 @Component({
   templateUrl: "./auth.component.html",
@@ -13,9 +18,11 @@ export class AuthComponent {
   public password: string;
   public server: string;
 
+  private modalRef: any;
 
 
-  constructor(public authService: AuthService, public router: Router) {
+
+  constructor(private authService: AuthService, public router: Router, private modalService: NgbModal) {
     this.setMessage();
 
     // Get the redirect URL from our auth service
@@ -25,6 +32,8 @@ export class AuthComponent {
     // Redirect the user
     this.router.navigate([redirect]);
   }
+
+
   public setMessage() {
     this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
   }
@@ -42,7 +51,11 @@ export class AuthComponent {
                           let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/login';
                           // Redirect the user
                           this.router.navigate([redirect]);
-                        }, error => { }
+                        }, error => { 
+                          this.open();
+                          this.modalRef.componentInstance.error = error;
+                          console.debug("test");
+                        }
     );
 
 
@@ -50,5 +63,9 @@ export class AuthComponent {
   public logout() {
     this.authService.logout();
     this.setMessage();
+  }
+
+  public open() {
+    this.modalRef = this.modalService.open( AuthModalComponent );
   }
 }
